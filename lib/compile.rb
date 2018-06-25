@@ -1,18 +1,15 @@
+require 'fileutils'
+require_relative 'directory'
 require_relative 'process_path'
 
 module Compile
+  include Directory
   include ProcessPath
-
-  # あとで実行テストを行う用のディレクトリ
-  WORK_DIR = "./work_dir/"
-
-  # コンパイルに必要なファイル群
-  # work_dirに入れておく
-  NEED_FILES_FOR_COMPILE = %w(winlib.c winlib.h)
 
   def initialize
     super
     @cannot_compile_list = []
+    @compile_files = Dir.glob("#{COMPILE_FILES_PATH}*").map {|path| File.basename(path) }
   end
 
   # 全ファイルを再帰的に探索
@@ -20,7 +17,7 @@ module Compile
     p path
     if File.directory?(path)
       Dir.each_child(path) { |name| compile_traverse(path + "/" + name) }
-    elsif File.extname(path) == ".c" && !NEED_FILES_FOR_COMPILE.member?(File.basename(path))
+    elsif File.extname(path) == ".c" && !@compile_files.member?(File.basename(path))
       processing_for_c(path)
     end
   end
@@ -35,17 +32,17 @@ module Compile
     end
   end
 
-  # コンパイルに必要なwinlibファイル群を、ディレクトリにコピー
+  # コンパイルに必要なファイル群を、ディレクトリにコピー
   def copy_need_files_for_compile(dir_path)
-    need_files = NEED_FILES_FOR_COMPILE.map { |file| WORK_DIR + file }
+    need_files = Dir.glob("#{COMPILE_FILES_PATH}*")
     need_files.each { |file| FileUtils.cp(file, dir_path) }
   end
 
   # cファイルをコンパイルし実行ファイルを返す
   def compile(path)
     exe_file = path.gsub(/\.c/, "")
-    object_files = [WORK_DIR + "winlib.o"].join(" ")
-    system("gcc -o '#{exe_file}' '#{path}' '#{object_files}'")
+    sub_c_files = Dir.glob("#{COMPILE_FILES_PATH}/*.c").join(" ")
+    system("gcc -o '#{exe_file}' '#{path}' '#{sub_c_files}'")
     exe_file
   end
 
