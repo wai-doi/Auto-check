@@ -42,6 +42,10 @@ class AutoCheckHomework
     puts @not_submitted_list.map { |item| item.join("\t") }
     puts @not_submitted_list.size
 
+    puts "--- 解凍エラー ---"
+    puts @unzip_error_list.map { |item| item.join("\t") }
+    puts @unzip_error_list.size
+
     puts "--- コンパイルエラー ---"
     puts @cannot_compile_list.map { |item| item.join("\t") }
     puts @cannot_compile_list.size
