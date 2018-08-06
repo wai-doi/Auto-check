@@ -59,5 +59,7 @@ module Compile
     individual_dir = WORK_DIR + "#{id}-#{name}/"
     Dir.mkdir(individual_dir) unless Dir.exist?(individual_dir)
     FileUtils.cp([path, exe_file], individual_dir)
+    # 実行テストがしやすいように名前をa.outに統一する     
+    File.rename("#{individual_dir}/#{File.basename(exe_file)}", "#{individual_dir}/a.out")
   end
 end
