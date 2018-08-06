@@ -1,5 +1,7 @@
 require 'rake/clean'
 
+KADAI_PATTERN = ["第*", "*Ques[0-9]"]
+
 CLEAN.include("work_dir/*/", "第*", "./backup")
 
 task :default => [:run]
@@ -12,7 +14,7 @@ end
 
 desc "課題ディレクトリの数をチェック"
 task :check_kadai_num do
-  kadai_dirs = FileList.new("第*")
+  kadai_dirs = FileList.new(KADAI_PATTERN)
   raise "課題が一つに定まりませんでした" unless kadai_dirs.size == 1
 end
 
@@ -34,5 +36,5 @@ task :init do
 end
 
 def kadai_dir
-  FileList.new("第*").first.gsub(/ /,'\ ')
+  FileList.new(KADAI_PATTERN).first.gsub(/ /,'\ ')
 end
