@@ -7,8 +7,10 @@ module ProcessPath
   	  
   	# 中間と期末テストの場合は名前だけとる  
   	else
-  	  m = path.match(/\/([^_]+)__/)
-  	  ["#", m[1]]
+  	  m = path.match(/\/([^_]+)__.+(\d{9})(?:\(\d+\))?.c\z/)
+  	  p path
+  	  p m
+  	  [m[2], m[1]]
   	end
   end
 end
