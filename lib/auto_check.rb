@@ -6,6 +6,7 @@ class AutoCheckHomework
   include UnZip
   include Compile
   include CopyExecutionFiles
+  include Directory
 
   # 先生とTAのID
   TEATURES_ID = %w(32115160 52034959 281743160 281843088)
@@ -20,6 +21,8 @@ class AutoCheckHomework
 
   def execute(kadai_dir)
     raise "#{kadai_dir}はありません" unless File.directory?(kadai_dir)
+    try_exist_dirs
+    
     # unzip
     unzip_traverse(kadai_dir)
 
